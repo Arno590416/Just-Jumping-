@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Monster
+  - Portal
   layers:
   - Default
   - TransparentFX
@@ -40,4 +42,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BackGroud
+    uniqueID: 1726679415
+    locked: 0
+  - name: Stage
+    uniqueID: 2581204077
+    locked: 0
+  - name: FrontGround
+    uniqueID: 2116400117
+    locked: 0
+  - name: UI
+    uniqueID: 3359284945
     locked: 0
