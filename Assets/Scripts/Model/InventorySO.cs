@@ -39,7 +39,7 @@ namespace Inventory.Model
                 InformAboutChange();
                 return quantity;
             }
-            quantity = AddStackableItem(item, quantity);
+            quantity = AddStackableItem(item, quantity);//quantitiy等于0（全部成功添加），不成功则返回剩余数量
             InformAboutChange();
             return quantity;
         }
@@ -63,52 +63,59 @@ namespace Inventory.Model
 
         private int AddStackableItem(ItemSO item, int quantity)
         {
+            // 遍历当前库存，尝试将物品堆叠到已有的堆叠槽中
             for (int i = 0; i < inventoryItems.Count; i++)
             {
-                if (inventoryItems[i].IsEmpty)
+                if (inventoryItems[i].IsEmpty) // 跳过空槽
                     continue;
-                if (inventoryItems[i].item.ID == item.ID)//判断堆叠
-                {
-                    int amountPossibleToTake =
-                        inventoryItems[i].item.MaxStackSize - inventoryItems[i].quantity;//计算可堆叠数
 
-                    if (quantity > amountPossibleToTake)
+                if (inventoryItems[i].item.ID == item.ID) // 判断是否是同一种物品
+                {
+                    // 计算当前槽位还能堆叠的数量
+                    int amountPossibleToTake = inventoryItems[i].item.MaxStackSize - inventoryItems[i].quantity;
+
+                    if (quantity > amountPossibleToTake) // 如果剩余数量超过可堆叠数量
                     {
+                        // 填满当前槽位
                         inventoryItems[i] = inventoryItems[i].ChangeQuantity(inventoryItems[i].item.MaxStackSize);
-                        quantity -= amountPossibleToTake;
+                        quantity -= amountPossibleToTake; // 剩余数量变化
                     }
-                    else
+                    else // 如果剩余数量可以完全堆叠到当前槽位
                     {
                         inventoryItems[i] = inventoryItems[i].ChangeQuantity(inventoryItems[i].quantity + quantity);
-                        InformAboutChange();
-                        return 0;
+                        InformAboutChange(); // 通知库存更新
+                        return 0; // 所有物品已成功添加，返回 0
                     }
                 }
             }
+
+            // 如果还有剩余物品，尝试将它们放入空槽中
             while (quantity > 0 && IsInventoryFull() == false)
             {
+                // 计算当前可以放入的数量（不能超过物品的最大堆叠数）
                 int newQuantity = Mathf.Clamp(quantity, 0, item.MaxStackSize);
-                quantity -= newQuantity;
-                AddItemToFirstFreeSlot(item, newQuantity);
+                quantity -= newQuantity; // 剩余数量变化
+                AddItemToFirstFreeSlot(item, newQuantity); // 添加到第一个空槽
             }
-            return quantity;
-        }
-        //public void RemoveItem(int itemIndex, int amount) //删除物品逻辑
-        //{
-        //    if (inventoryItems.Count > itemIndex)
-        //    {
-        //        if (inventoryItems[itemIndex].IsEmpty)
-        //            return;
-        //        int reminder = inventoryItems[itemIndex].quantity - amount;
-        //        if (reminder <= 0)
-        //            inventoryItems[itemIndex] = InventoryItem.GetEmptyItem();
-        //        else
-        //            inventoryItems[itemIndex] = inventoryItems[itemIndex]
-        //                .ChangeQuantity(reminder);
 
-        //        InformAboutChange();
-        //    }
-        //}
+            return quantity; // 返回未能添加的剩余数量
+        }
+        public void RemoveItem(int itemIndex, int amount) //删除物品逻辑
+        {
+            if (inventoryItems.Count > itemIndex)
+            {
+                if (inventoryItems[itemIndex].IsEmpty)
+                    return;
+                int reminder = inventoryItems[itemIndex].quantity - amount;
+                if (reminder <= 0)
+                    inventoryItems[itemIndex] = InventoryItem.GetEmptyItem();
+                else
+                    inventoryItems[itemIndex] = inventoryItems[itemIndex]
+                        .ChangeQuantity(reminder);
+
+                InformAboutChange();
+            }
+        }
         public void AddItem(InventoryItem item)
         {
             AddItem(item.item, item.quantity);

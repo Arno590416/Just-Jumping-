@@ -27,6 +27,8 @@ namespace Inventory.UI
 
         List<UIInventoryItem> listOfUIItems = new List<UIInventoryItem>();
 
+        [SerializeField]
+        private ItemActionPanel actionPanel;
         private void Awake()//脚本对象实例化时调用
         {
             Hide();
@@ -129,17 +131,30 @@ namespace Inventory.UI
             itemDescription.ResetDescription();
             DeselectAllItems();
         }
+        public void AddAction(string actionName, Action performAction)
+        {
+            actionPanel.AddButon(actionName, performAction);
+        }
+
+        public void ShowItemAction(int itemIndex)
+        {
+            actionPanel.Toggle(true);
+            actionPanel.transform.position = listOfUIItems[itemIndex].transform.position;
+        }
+
         private void DeselectAllItems()
         {
             foreach (UIInventoryItem item in listOfUIItems)
             {
                 item.Deselect();
             }
+                actionPanel.Toggle(false);
         }
         public void Hide()
         {
             gameObject.SetActive(false);
             ResetDraggedItem();
+            actionPanel.Toggle(false);
         }
 
         internal void UpdateDescription(int itemIndex, Sprite itemImage, string name, string description)
@@ -147,6 +162,7 @@ namespace Inventory.UI
             itemDescription.SetDescription(itemImage, name, description);
             DeselectAllItems();
             listOfUIItems[itemIndex].Select();
+            Debug.Log($"Item {name} selected");
         }
     }
 }

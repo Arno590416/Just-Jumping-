@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34dcc21f22be614f8c9f1e2b22826d2, type: 3}
   m_Name: IsItCommenmorated
   m_EditorClassIdentifier: 
-  <ParameterName>k__BackingField: IsItCommenmorated
+  <ParameterName>k__BackingField: Available

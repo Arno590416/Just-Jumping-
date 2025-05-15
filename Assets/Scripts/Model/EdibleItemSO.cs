@@ -12,8 +12,9 @@ namespace Inventory.Model
         [SerializeField]
         private List<ModifierData> modifiersData = new List<ModifierData>();
 
-        public string ActionName => "Commenmorate";//通过对遗物悼念对技能进行遗忘，使得跳跃更远
+        public string ActionName => "Consume";//通过对遗物悼念对技能进行遗忘，使得跳跃更远
 
+        [field: SerializeField]
         public AudioClip actionSFX { get; private set; }
 
         public bool PerformAction(GameObject character, List<ItemParameter> itemState = null)
@@ -40,7 +41,7 @@ namespace Inventory.Model
     }
 
     [Serializable]
-    public class ModifierData//定义buff内容
+    public class ModifierData//定义buff内容 
     {
         public CharacterStatModifierSO statModifier;
         public float value;

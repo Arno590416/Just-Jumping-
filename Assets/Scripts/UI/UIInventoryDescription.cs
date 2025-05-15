@@ -28,8 +28,7 @@ namespace Inventory.UI
             description.text = "";
         }
 
-        public void SetDescription(Sprite sprite, string itemName,
-            string itemDescription)
+        public void SetDescription(Sprite sprite, string itemName,string itemDescription)
         {
             itemImage.gameObject.SetActive(true);
             itemImage.sprite = sprite;
